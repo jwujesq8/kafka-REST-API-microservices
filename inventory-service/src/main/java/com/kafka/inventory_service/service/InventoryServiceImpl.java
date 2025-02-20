@@ -1,7 +1,8 @@
 package com.kafka.inventory_service.service;
 
 import com.kafka.inventory_service.dto.InventoryDto;
-import com.kafka.inventory_service.dto.CheckOrderResponseDto;
+import com.kafka.inventory_service.dto.InventoryIdDto;
+import com.kafka.inventory_service.dto.POSTInventoryDto;
 import com.kafka.inventory_service.entity.Inventory;
 import com.kafka.inventory_service.modelMapper.InventoryModelMapper;
 import com.kafka.inventory_service.reposotiry.InventoryRepository;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 
@@ -24,59 +26,33 @@ public class InventoryServiceImpl implements InventoryService {
     private final InventoryRepository inventoryRepository;
     private final InventoryModelMapper inventoryModelMapper;
 
-
-    public void editInventory(InventoryDto inventoryDto) {
-
-        Inventory inventory = inventoryModelMapper.map_InventoryDto_to_Inventory(inventoryDto);
-        inventoryRepository.save(inventory);
-
+    @Transactional
+    public InventoryDto addInventory(POSTInventoryDto invDto) {
+        Inventory inventory = inventoryModelMapper.map_POSTInventoryDto_to_Inventory(invDto);
+        return inventoryModelMapper.map_Inventory_to_InventoryDto(inventoryRepository.save(inventory));
     }
 
-    // KAFKA LISTENING and SENDING
-    public List<InventoryDto> showInventory(int page, int size) {
+    @Transactional
+    public InventoryDto updateInventoryById(InventoryDto invDto) {
+        Inventory inventory = inventoryModelMapper.map_InventoryDto_to_Inventory(invDto);
+        return inventoryModelMapper.map_Inventory_to_InventoryDto(inventoryRepository.save(inventory));
+    }
 
+    public void deleteInventoryById(InventoryIdDto invIdDto) {
+        inventoryRepository.deleteById(invIdDto.getId());
+    }
+
+    public Optional<InventoryDto> getInventoryById(InventoryIdDto invIdDto) {
+        return Optional.ofNullable(inventoryModelMapper.map_Inventory_to_InventoryDto(
+                inventoryRepository.findById(invIdDto.getId()).orElse(null)
+        ));
+    }
+
+    public List<InventoryDto> showInventoryPaging(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Inventory> inventoryPage = inventoryRepository.findAll(pageable);
         return inventoryPage.getContent().stream()
                 .map(inventoryModelMapper::map_Inventory_to_InventoryDto)
                 .collect(Collectors.toList());
-
-    }
-
-
-    // KAFKA LISTENING
-    @Transactional
-    public void checkOrder(List<InventoryDto> inventoryDtoList) {
-
-        inventoryDtoList.forEach(inventoryDto -> {
-            Optional<Inventory> inventoryDB = inventoryRepository.findById(inventoryDto.getId());
-
-            if (inventoryDB.isPresent()) {
-                Inventory inventory = inventoryDB.get();
-
-                if (inventoryDto.getQuantity() <= inventory.getQuantity()) {
-                    inventory.setQuantity(inventory.getQuantity() - inventoryDto.getQuantity());
-                    inventoryRepository.save(inventory);
-                } else {
-                    sendCheckOrderResponse(false);
-                    throw new IllegalArgumentException("Insufficient quantity for inventory item ID: " + inventoryDto.getId());
-                }
-            } else {
-                sendCheckOrderResponse(false);
-                throw new IllegalArgumentException("Inventory item not found for ID: " + inventoryDto.getId());
-            }
-        });
-
-        sendCheckOrderResponse(true);
-
-    }
-
-
-
-    // KAFKA SENDING
-    public void sendCheckOrderResponse(boolean response) {
-        CheckOrderResponseDto.builder()
-                .response(response)
-                .build();
     }
 }
