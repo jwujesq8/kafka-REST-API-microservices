@@ -44,47 +44,47 @@ public class ModelMapperConfig {
         // Order->OrderDto
         // + OrderId orderId -> UUID userId, UUID inventoryId
         // + OrderStatus orderStatus -> String status
-        TypeMap<Order, OrderDto> order_OrderDto = mapper.createTypeMap(Order.class, OrderDto.class);
-        order_OrderDto.addMappings(mapping -> mapping
+        TypeMap<Order, OrderDto> typeMap_Order_OrderDto = mapper.createTypeMap(Order.class, OrderDto.class);
+        typeMap_Order_OrderDto.addMappings(mapping -> mapping
                 .using(converter_OrderId_UserId)
                 .map(Order::getOrderId, OrderDto::setUserId));
-        order_OrderDto.addMappings(mapping -> mapping
+        typeMap_Order_OrderDto.addMappings(mapping -> mapping
                 .using(converter_OrderId_InventoryId)
                 .map(Order::getOrderId, OrderDto::setInventoryId));
-        order_OrderDto.addMappings(mapping -> mapping
+        typeMap_Order_OrderDto.addMappings(mapping -> mapping
                 .using(converter_OrderStatus_StatusString)
                 .map(Order::getOrderStatus, OrderDto::setStatus));
-        order_OrderDto.implicitMappings();
+        typeMap_Order_OrderDto.implicitMappings();
 
         // POSTOrderDto->Order
         // + UUID userId, UUID inventoryId -> OrderId orderId
-        TypeMap<POSTOrderDto, Order> POSTOrderDto_Order = mapper.createTypeMap(POSTOrderDto.class, Order.class);
-        POSTOrderDto_Order.addMappings(mapping -> mapping.skip(Order::setOrderId));
-        POSTOrderDto_Order.setPostConverter(context -> {
+        TypeMap<POSTOrderDto, Order> typeMap_POSTOrderDto_Order = mapper.createTypeMap(POSTOrderDto.class, Order.class);
+        typeMap_POSTOrderDto_Order.addMappings(mapping -> mapping.skip(Order::setOrderId));
+        typeMap_POSTOrderDto_Order.setPostConverter(context -> {
             POSTOrderDto source = context.getSource();
             Order destination = context.getDestination();
             OrderId orderId = new OrderId(source.getUserId(), source.getInventoryId());
             destination.setOrderId(orderId);
             return destination;
         });
-        POSTOrderDto_Order.implicitMappings();
+        typeMap_POSTOrderDto_Order.implicitMappings();
 
         // OrderDto->Order
         // + UUID userId, UUID inventoryId -> OrderId orderId
         // + String status -> OrderStatus orderStatus
-        TypeMap<OrderDto, Order> orderDto_Order = mapper.createTypeMap(OrderDto.class, Order.class);
-        orderDto_Order.addMappings(mapping -> mapping.skip(Order::setOrderId));
-        orderDto_Order.addMappings(mapping -> mapping
+        TypeMap<OrderDto, Order> typeMap_OrderDto_Order = mapper.createTypeMap(OrderDto.class, Order.class);
+        typeMap_OrderDto_Order.addMappings(mapping -> mapping.skip(Order::setOrderId));
+        typeMap_OrderDto_Order.addMappings(mapping -> mapping
                 .using(converter_StatusString_OrderStatus)
                 .map(OrderDto::getStatus, Order::setOrderStatus));
-        orderDto_Order.setPostConverter(context -> {
+        typeMap_OrderDto_Order.setPostConverter(context -> {
             OrderDto source = context.getSource();
             Order destination = context.getDestination();
             OrderId orderId = new OrderId(source.getUserId(), source.getInventoryId());
             destination.setOrderId(orderId);
             return destination;
         });
-        orderDto_Order.implicitMappings();
+        typeMap_OrderDto_Order.implicitMappings();
 
         return mapper;
     }
