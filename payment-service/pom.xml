@@ -12,7 +12,7 @@
 	<artifactId>payment-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>payment-service</name>
-	<description>Payment Service for book-stock REST API</description>
+	<description>Payment Service for Microservices Architecture (User, Inventory, Order, Payment)</description>
 	<url/>
 	<licenses>
 		<license/>

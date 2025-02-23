@@ -12,7 +12,7 @@
 	<artifactId>inventory-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>inventory-service</name>
-	<description>Inventory Service for book-stock REST API</description>
+	<description>Inventory Service for Microservices Architecture (User, Inventory, Order, Payment)</description>
 	<url/>
 	<licenses>
 		<license/>

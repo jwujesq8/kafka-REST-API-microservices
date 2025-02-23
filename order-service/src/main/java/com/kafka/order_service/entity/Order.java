@@ -1,30 +1,31 @@
 package com.kafka.order_service.entity;
 
+import com.kafka.inventory_service.entity.Inventory;
 import com.kafka.user_service.entity.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 import java.util.UUID;
 
 @Entity
 @Table(name = "orders")
+@Getter
+@Setter
 public class Order {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @EmbeddedId
+    private OrderId orderId;
 
-    @Column(name = "user_id", nullable = false)
-    private UUID userId;
-
+    @NotNull(message = "Order must have a date")
     private Date date;
+
     @Column(name = "address_to")
     private String addressTo;
 
     @ManyToOne
     @JoinColumn(name = "status_id")
     private OrderStatus orderStatus;
-
-    @Transient
-    private User user;
 }

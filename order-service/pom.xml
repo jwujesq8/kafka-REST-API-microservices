@@ -12,7 +12,7 @@
 	<artifactId>order-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>order-service</name>
-	<description>Order Service for book-stock REST API</description>
+	<description>Order Service for Microservices Architecture (User, Inventory, Order, Payment)</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -68,6 +68,11 @@
 		<dependency>
 			<groupId>com.kafka</groupId>
 			<artifactId>user-service</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.kafka</groupId>
+			<artifactId>inventory-service</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 
