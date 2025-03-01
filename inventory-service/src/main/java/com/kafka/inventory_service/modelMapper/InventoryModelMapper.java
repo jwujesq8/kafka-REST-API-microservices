@@ -8,10 +8,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
 public class InventoryModelMapper {
 
-    private final ModelMapper mapper;
+    private final ModelMapper mapper = new ModelMapper();
 
     public Inventory map_InventoryDto_to_Inventory(InventoryDto invDto) {
         return mapper.map(invDto, Inventory.class);

@@ -41,7 +41,12 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     // TODO: kafka consumer
-    public void requestPayment(PaymentId paymentId) {
+    public void makePayment(PaymentId paymentId) {
+
+    }
+
+    // TODO: kafka producer
+    public void sendPaymentStatusInfo(PaymentId paymentId){
 
     }
 }

@@ -14,7 +14,10 @@ public interface PaymentService {
     public void deletePayment(PaymentId paymentId);
 
     // kafka consumer
-    public void requestPayment(PaymentId paymentId);
+    public void makePayment(PaymentId paymentId);
+
+    // kafka producer
+    public void sendPaymentStatusInfo(PaymentId paymentId);
 
 
 }
