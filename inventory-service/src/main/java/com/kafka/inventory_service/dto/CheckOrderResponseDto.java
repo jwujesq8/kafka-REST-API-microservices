@@ -8,7 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-@Builder
 public class CheckOrderResponseDto {
 
     private String serviceName = "Inventory service";
