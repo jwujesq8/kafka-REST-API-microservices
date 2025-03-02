@@ -31,7 +31,7 @@ public class UserController {
 
     }
 
-    @GetMapping
+    @GetMapping("/inventory")
     public List<InventoryDto> requestAndShowInventoryList(@RequestParam(name = "page", defaultValue = "1") int page,
                                                           @RequestParam(name = "size", required = false,
                                                                   defaultValue = "3") int size){
